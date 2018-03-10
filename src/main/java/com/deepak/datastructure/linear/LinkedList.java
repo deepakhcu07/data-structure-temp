@@ -174,6 +174,54 @@ public class LinkedList<E> implements Iterable<E> {
 		length--;
 	}
 	
+	public void remove(E element) {
+		if(isEmpty()) {
+			return;
+		}
+		if(head.element.equals(element)) {
+			removeFirst();
+			return;
+		}
+		Node<E> current = head;
+		Node<E> previous = null;
+		while(current!=null) {
+			if(current.element.equals(element)) {
+				break;
+			}
+			previous = current;
+			current = current.next;
+		}
+		if(current!=null) {
+			previous.next = current.next;
+			length--;
+		}
+	}
+	
+	//
+	public LinkedList<E> reverse(){
+		LinkedList<E> list = new LinkedList<E>();
+		Node<E> temp = head;
+		while(temp!=null) {
+			list.addFirst(temp.element);
+			temp = temp.next;
+		}
+		return list;
+	}
+	
+	public void reverseList() {
+		Node<E> previous = null;
+		Node<E> current = head;
+		Node<E> next = null;
+		
+		while(current!=null) {
+			next = current.next;
+			current.next = previous;
+			previous = current;
+			current = next;
+		}
+		head =previous;
+	}
+	
 	
 	
 	
@@ -279,6 +327,10 @@ public class LinkedList<E> implements Iterable<E> {
 		System.out.println(list);
 		System.out.println("Length : " + list.length());
 		
+		System.out.println("Reverse List ");
+		list.reverseList();
+		System.out.println(list);
+		
 		System.out.println("Finding Element");
 		
 		System.out.println(" Is List Conatins 30 : " + list.conatins(30));
@@ -309,6 +361,11 @@ public class LinkedList<E> implements Iterable<E> {
 		list.removeAt(0);
 		list.removeAt(3);
 		list.removeAt(list.length()-1);
+		System.out.println(list);
+		System.out.println("Length : " + list.length());
+		
+		System.out.println("Removing Specific Element");
+		list.remove(15);
 		System.out.println(list);
 		System.out.println("Length : " + list.length());
 		
