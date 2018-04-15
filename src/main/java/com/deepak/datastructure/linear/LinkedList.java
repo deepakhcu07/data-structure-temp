@@ -8,6 +8,11 @@ public class LinkedList<E> implements Iterable<E> {
 	private Node<E> head;
 	private int length;
 	
+	
+	public Node<E> getHead() {
+		return head;
+	}
+	
 	public int length() {
 		return length;
 	}
@@ -29,10 +34,10 @@ public class LinkedList<E> implements Iterable<E> {
 		}
 		
 		Node<E> temp = head;
-		while(temp.next!=null) {
-			temp = temp.next;
+		while(temp.getNext()!=null) {
+			temp = temp.getNext();
 		}
-		temp.next = new Node<E>(element,null);
+		temp.setNext(new Node<E>(element,null));
 		length++;
 	}
 	
@@ -46,10 +51,10 @@ public class LinkedList<E> implements Iterable<E> {
 		Node<E> previous = null;
 		for(int i=0;i<position && current!=null;i++) {
 			previous = current;
-			current = current.next;
+			current = current.getNext();
 		}
 		
-		previous.next = new Node<E>(element,current);
+		previous.setNext(new Node<E>(element,current));
 		length++;
 	}
 	
@@ -69,10 +74,10 @@ public class LinkedList<E> implements Iterable<E> {
 				break;
 			}
 			previous = current;
-			current = current.next;
+			current = current.getNext();
 		}
 		if(current!=null) {
-			previous.next = new Node<E>(element,current);
+			previous.setNext(new Node<E>(element,current));
 			length++;
 		}
 	}
@@ -87,10 +92,10 @@ public class LinkedList<E> implements Iterable<E> {
 			if(temp.element.equals(keyElement)) {
 				break;
 			}
-			temp = temp.next;
+			temp = temp.getNext();
 		}
 		if(temp!=null) {
-			temp.next = new Node<E>(element,temp.next);
+			temp.setNext(new Node<E>(element,temp.getNext()));
 			length++;
 		}
 	}
@@ -122,7 +127,7 @@ public class LinkedList<E> implements Iterable<E> {
 				break;
 			}
 			index ++;
-			temp = temp.next;
+			temp = temp.getNext();
 		}
 		
 		return position;
@@ -134,7 +139,7 @@ public class LinkedList<E> implements Iterable<E> {
 		if(isEmpty()) {
 			return;
 		}
-		head = head.next;
+		head = head.getNext();
 		length--;
 		return;
 	}
@@ -145,11 +150,11 @@ public class LinkedList<E> implements Iterable<E> {
 		}
 		Node<E> current = head;
 		Node<E> previous = null;
-		while(current.next!=null) {
+		while(current.getNext()!=null) {
 			previous = current;
-			current = current.next;
+			current = current.getNext();
 		}
-		previous.next = current.next;
+		previous.setNext(current.getNext());
 		length--;
 	}
 	
@@ -165,13 +170,61 @@ public class LinkedList<E> implements Iterable<E> {
 		Node<E> previous = null;
 		for(int i=0;i<position && current!=null;i++) {
 			previous = current;
-			current = current.next;
+			current = current.getNext();
 		}
 		if(current==null) {
 			throw new IndexOutOfBoundsException();
 		}
-		previous.next = current.next;
+		previous.setNext(current.getNext());
 		length--;
+	}
+	
+	public void remove(E element) {
+		if(isEmpty()) {
+			return;
+		}
+		if(head.element.equals(element)) {
+			removeFirst();
+			return;
+		}
+		Node<E> current = head;
+		Node<E> previous = null;
+		while(current!=null) {
+			if(current.element.equals(element)) {
+				break;
+			}
+			previous = current;
+			current = current.getNext();
+		}
+		if(current!=null) {
+			previous.setNext(current.getNext());
+			length--;
+		}
+	}
+	
+	//
+	public LinkedList<E> reverse(){
+		LinkedList<E> list = new LinkedList<E>();
+		Node<E> temp = head;
+		while(temp!=null) {
+			list.addFirst(temp.element);
+			temp = temp.getNext();
+		}
+		return list;
+	}
+	
+	public void reverseList() {
+		Node<E> previous = null;
+		Node<E> current = head;
+		Node<E> next = null;
+		
+		while(current!=null) {
+			next = current.getNext();
+			current.setNext(previous);
+			previous = current;
+			current = next;
+		}
+		head =previous;
 	}
 	
 	
@@ -210,7 +263,7 @@ public class LinkedList<E> implements Iterable<E> {
 				throw new NoSuchElementException();
 			}
 			E result = this.nextNode.element;
-			this.nextNode = this.nextNode.next;
+			this.nextNode = this.nextNode.getNext();
 			return result;
 		}
 		
@@ -228,12 +281,24 @@ public class LinkedList<E> implements Iterable<E> {
 	 * An Inner class to conatins the infornation about each Node of LinkedList
 	 * 
 	 */
-	private class Node<E>{
+	public static class Node<E>{
 		private E element;
 		private Node<E> next;
 		
 		public Node(E element, Node<E> next){
 			this.element = element;
+			this.setNext(next);
+		}
+		
+		public Node<E> getNext(){
+			return next;
+		}
+		
+		public E getElement() {
+			return element;
+		}
+
+		public void setNext(Node<E> next) {
 			this.next = next;
 		}
 	}
@@ -279,6 +344,10 @@ public class LinkedList<E> implements Iterable<E> {
 		System.out.println(list);
 		System.out.println("Length : " + list.length());
 		
+		System.out.println("Reverse List ");
+		list.reverseList();
+		System.out.println(list);
+		
 		System.out.println("Finding Element");
 		
 		System.out.println(" Is List Conatins 30 : " + list.conatins(30));
@@ -312,6 +381,16 @@ public class LinkedList<E> implements Iterable<E> {
 		System.out.println(list);
 		System.out.println("Length : " + list.length());
 		
+		System.out.println("Removing Specific Element");
+		list.remove(15);
+		System.out.println(list);
+		System.out.println("Length : " + list.length());
+		
+		
+	}
+
+	public void setHead(Node<E> toFix) {
+		this.head = toFix;
 		
 	}
 
