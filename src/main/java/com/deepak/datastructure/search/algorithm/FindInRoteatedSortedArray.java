@@ -38,7 +38,7 @@ public class FindInRoteatedSortedArray {
 					i = m + 1;
 				}
 			} else {
-				if(nums[m] <  target && target < nums[j]) {
+				if(nums[m] <  target && target <= nums[j]) {
 					i = m+ 1;
 					
 				}else {
